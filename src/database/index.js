@@ -11,5 +11,7 @@ const connectDB = async() =>{
         process.exit(1)
     }
 }
-export default connectDB
+export default connectDB // this is used to connect to the database
+// this is an async function that connects to the database and returns a promise.
+// it returns to index.js file where it is called.
 
