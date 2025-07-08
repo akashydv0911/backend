@@ -68,6 +68,11 @@ userSchema.methods.isPasswordCorrect = async function(password) {
     
 }
 
+// Access Token ek digital key ya pass hota hai jo prove 
+// karta hai ki user authenticated (yaani verify ho chuka hai) hai.
+
+// Yeh JWT (JSON Web Token) format mein hota hai aur 
+// jab user login karta hai tab banaya jata hai.
 
 userSchema.methods.generateAccessToken = function(){
     jwt.sign({
@@ -81,6 +86,9 @@ userSchema.methods.generateAccessToken = function(){
         expiresIn: process.env.ACCESS_TOKEN_EXPIRY
     })
 }
+
+// Refresh Token ek special type ka token hota hai jo aapko naya 
+// access token generate karne ke liye diya jata hai jab purana access token expire ho jata hai.
 
 userSchema.methods.generateRefreshToken = function(){
     jwt.sign({
