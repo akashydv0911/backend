@@ -1,5 +1,5 @@
 import {asyncHandler} from "../utils/asyncHandler.js"
-import {ApiError} from "../utils/apiError.js"
+import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js" // Importing the User model to interact with the user data in the database
 import {uploadOnCloudinary} from "../utils/cloudinary.js" // Importing a utility function to handle file uploads to Cloudinary
 import { ApiResponse } from "../utils/ApiResponse.js"
@@ -17,7 +17,7 @@ const registerUser = asyncHandler( async(req, res) =>{
     // return response 
 
     const {fullname,email,username, password} = req.body // destructuring the body of the request .This line assumes that the incoming HTTP request has a body with keys fullname, email, username, and password.
-    console.log("email",email);
+    // console.log("email",email);
 
     if(
         [fullname, email, username, password].some((field) => //some() method checks if at least one element in the array passes the test implemented by the provided function.
@@ -29,7 +29,7 @@ const registerUser = asyncHandler( async(req, res) =>{
         throw new ApiError(400, "Email is not valid") // if email is not valid, throw an error
     }
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [ // $or operator is used to find a document that matches at least one of the specified conditions
             {email}, // checking if email already exists
             {username} // checking if username already exists
@@ -40,8 +40,16 @@ const registerUser = asyncHandler( async(req, res) =>{
         throw new ApiError(409, "User already exists with this email or username") // throw an error
     }
 
-    const avatarLocalPath= req.files?.avatar[0]?.path; // getting the path of the avatar image from the request files
-    const coverLocalPath= req.files?.cover[0]?.path; // getting the path of the cover image from the request files
+    if (!req.files || !req.files.avatar || !Array.isArray(req.files.avatar) || !req.files.avatar[0]) {
+        throw new ApiError(400, "Avatar image is required.");
+    } 
+    if (!req.files.cover || !Array.isArray(req.files.cover) || !req.files.cover[0]) {
+        throw new ApiError(400, "Cover image is required.");
+    }
+
+    const avatarLocalPath = req.files.avatar[0].path;
+    const coverLocalPath = req.files.cover[0].path;
+
 
     if(!avatarLocalPath) { // checking if avatar or cover image is not uploaded
         throw new ApiError(400, "Avatar images are required") // throw an error
@@ -58,7 +66,7 @@ const registerUser = asyncHandler( async(req, res) =>{
    const user = await User.create({ // creating a new user in the database
         fullname,
         email,
-        username : username.toLowerCase(), // converting username to lowercase to avoid case sensitivity issues
+        username,// converting username to lowercase to avoid case sensitivity issues
         password, // password will be hashed in the User model
         avatar: avatar.url, // setting the avatar url from cloudinary
         coverImage: coverImage?.url || "", // if cover image is not uploaded, set it to an empty string

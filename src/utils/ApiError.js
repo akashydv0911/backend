@@ -19,7 +19,7 @@ class ApiError extends Error {
             this.stack = stack 
         }
         else{
-            error.captureStackTrace(this,this.constructor) //JavaScript ka built-in method captureStackTrace use karke automatic trace generate karte hain — jisse pata chale error kahan hua.
+            Error.captureStackTrace(this,this.constructor) //JavaScript ka built-in method captureStackTrace use karke automatic trace generate karte hain — jisse pata chale error kahan hua.
         }
     }
 }

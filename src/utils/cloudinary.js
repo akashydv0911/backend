@@ -1,5 +1,5 @@
 import {v2 as cloudinary} from "cloudinary" //cloudinary is a cloud-based service that provides a solution for managing images and videos in web and mobile applications.
-import {fs} from "fs" //file system,it deals with reading and writing files
+import fs from "fs" //file system,it deals with reading and writing files
 
 
 
@@ -21,7 +21,8 @@ const uploadOnCloudinary = async (localFilePath) => {
             resource_type : "auto"
         })
         // file has been uploaded successfully
-        console.log("File uploaded successfully to Cloudinary",response.url);
+        // console.log("File uploaded successfully to Cloudinary",response.url);
+        fs.unlinkSync(localFilePath); // remove the locally saved temporary file after upload
         return response;
     } catch (error) {
         fs.unlinkSync(localFilePath); // remove the locally saved temporary file as the upload operation got failed
