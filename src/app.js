@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'; 
 
+
 const app = express();
+
 
 app.use(cors({
     origin: process.env.CORS_ORIGIN || '*', // Allow all origins req by default, or specify a specific origin

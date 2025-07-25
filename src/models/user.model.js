@@ -62,7 +62,7 @@ userSchema.pre("save", async function (next) {
 
 // custom method in the middleware
 
-userSchema.methods.isPasswordCorrect = async function(password) {
+userSchema.methods.isPasswordMatched = async function(password) {
 
     return await bcrypt.compare(password,this.password) //encrypted password compare hoga user jab dubara login krega tab
     
@@ -75,7 +75,7 @@ userSchema.methods.isPasswordCorrect = async function(password) {
 // jab user login karta hai tab banaya jata hai.
 
 userSchema.methods.generateAccessToken = function(){
-    jwt.sign({
+    return jwt.sign({
         _id: this._id,
         email: this.email,
         userName: this.userName,
@@ -91,7 +91,7 @@ userSchema.methods.generateAccessToken = function(){
 // access token generate karne ke liye diya jata hai jab purana access token expire ho jata hai.
 
 userSchema.methods.generateRefreshToken = function(){
-    jwt.sign({
+    return jwt.sign({
         _id: this._id
 
 
